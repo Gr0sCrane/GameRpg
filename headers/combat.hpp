@@ -5,8 +5,8 @@
 enum class GameState {
     FREE, // the player is free to move
     COMBAT, // Combat mode
-    TITLE // Titlescreen
-    //TODO maybe a pause mode
+    TITLE ,// Titlescreen
+    PAUSE // pause mode (still in work)
 };
 
 enum class Turn{

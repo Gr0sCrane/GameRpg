@@ -7,6 +7,11 @@
 #include "position.hpp"
 #include "entity.hpp"
 
+enum class MobState {
+    FREE,
+    CHASE
+};
+
 class Item : public Entity {
     private:
     std::string name;
@@ -72,6 +77,7 @@ private:
     std::string mobname;
     Stats stats;
     Inventory inventory;
+    MobState currentState;
 public:
     Mob(const std::string& name,Stats stats,Position pos);
     std::string getMobName() const;
