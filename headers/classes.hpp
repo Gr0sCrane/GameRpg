@@ -3,63 +3,7 @@
 #include <vector>
 #include <memory>
 #include <string>
-#include <functional>
-
-/**
- * @enum EntityType
- * @brief Enum class that represent the Type of the Entity: Player,Mob,Item
- */
-enum class EntityType {
-    PLAYER,
-    MOB,
-    ITEM,
-    VOID
-};
-
-/**
- * @struct Position
- * @brief Represent a position on the board.
- * @param x X coord
- * @param y Y coord
- */
-struct Position {
-    int x;
-    int y;
-
-    Position(int x = 0,int y = 0) : x(x), y(y) {}
-
-    bool operator==(const Position& other) const {
-        return x == other.x && y == other.y;
-    }
-
-};
-namespace std {
-    template <>
-    struct hash<Position> {
-        std::size_t operator()(const Position& pos) const {
-            return std::hash<int>()(pos.x) ^ (std::hash<int>()(pos.y) << 1);
-        }
-    };
-}
-
-class Entity {
-    private:
-    EntityType type;
-    double hp;
-    double attack;
-    Position Pos;
-    public:
-    Entity(EntityType t, double hp, double attack, Position pos);
-    virtual ~Entity();
-    
-    bool isAlive() const;
-    virtual std::string getClassName() const;
-    
-    void setPosition(Position pos);
-    Position getPosition();
-    
-    EntityType getType() const;
-};
+#include "entity.hpp"
 
 class Item : public Entity {
     private:
