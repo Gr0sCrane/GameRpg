@@ -29,6 +29,7 @@ public:
     void DeleteEntity(Position pos);
 
     std::shared_ptr<Entity> getEntityAt(Position pos) const;
+    std::unordered_map<Position,std::shared_ptr<Entity>> getEntities() const;
 
     EntityType getEntityType(Position pos) const;
 

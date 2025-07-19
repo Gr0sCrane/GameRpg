@@ -51,6 +51,10 @@ EntityType Board::getEntityType(Position pos) const {
     return EntityType::VOID;
 }
 
+std::unordered_map<Position,std::shared_ptr<Entity>> Board::getEntities() const{
+    return entities;
+}
+
 void Board::DrawBoard(SDL_Renderer* renderer,
     SDL_Texture* PlayerTexture,SDL_Texture* SwordTexture,
     SDL_Texture* BowTexture, SDL_Texture* MobTexture,
