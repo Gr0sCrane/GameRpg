@@ -33,3 +33,15 @@ void Mob::attackPlayer(std::shared_ptr<Player> player) {
 
     player->getStats().hp = playerHp;
 }
+
+Enemystate Mob::getCurrentState() const {
+    return currentState;
+}
+
+void Mob::setChase(){
+    currentState = Enemystate::CHASE;
+}
+
+void Mob::setPatrol(){
+    currentState = Enemystate::PATROL;
+}

@@ -1,5 +1,8 @@
+#pragma once
 #include <iostream>
 #include "classes.hpp"
+
+class Mob;
 
 class Player : public Entity {
 private:

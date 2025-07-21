@@ -1,12 +1,14 @@
 #include <iostream>
 #include "board.hpp"
 #include "input.h"
+#include "player.hpp"
+#include "mob.hpp"
 
 enum class GameState {
     FREE, // the player is free to move
     COMBAT, // Combat mode
-    TITLE // Titlescreen
-    //TODO maybe a pause mode
+    TITLE, // Titlescreen
+    PAUSE // Pause mode
 };
 
 enum class Turn{
