@@ -42,6 +42,9 @@ void Board::DeleteEntity(Position pos) {
     }
 }
 
+std::unordered_map<Position,std::shared_ptr<Entity>> Board::getEntities() const {
+    return entities;
+}
 
 EntityType Board::getEntityType(Position pos) const {
 

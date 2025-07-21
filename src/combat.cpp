@@ -99,15 +99,6 @@ void StartFight(Board& board, std::shared_ptr<Player> player, std::shared_ptr<Mo
                 exit(0);
             }
 
-            if (mob->getStats().hp <= 0) { // Enemy defeated
-                isCombatOver = true;
-                player->getStats().gainXp(mob->getStats().level * 3); // Player gain Xp 
-                break;
-            } else if (player->getStats().hp <= 0) { // Player defeated
-                isCombatOver = true;
-                break;
-            }
-
             if (currentTurn == Turn::PLAYER && e.type == SDL_KEYDOWN) {
                 if (e.key.keysym.scancode == SDL_SCANCODE_RIGHT) {
                     selectedIndex = (selectedIndex + 1) % options.size();
@@ -137,6 +128,15 @@ void StartFight(Board& board, std::shared_ptr<Player> player, std::shared_ptr<Mo
 
         displayCombat(renderer, font, playerTexture, mobTexture, player, mob, currentTurn, selectedIndex);
 
+        if (mob->getStats().hp <= 0) { // Enemy defeated
+            isCombatOver = true;
+            player->getStats().gainXp(mob->getStats().level * 3); // Player gain Xp 
+            break;
+        } else if (player->getStats().hp <= 0) { // Player defeated
+            isCombatOver = true;
+            break;
+        }
+        
         // Enemy Turn
         if (currentTurn == Turn::MOB) {
             SDL_Delay(500);
@@ -144,6 +144,7 @@ void StartFight(Board& board, std::shared_ptr<Player> player, std::shared_ptr<Mo
             currentTurn = Turn::PLAYER;
             SDL_Delay(500);
         }
+
     }
 }
 

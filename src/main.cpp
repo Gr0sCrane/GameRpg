@@ -33,6 +33,8 @@ int main(int argc, char *argv[]) {
     board.setEntity(Position(randomPosItem.x, randomPosItem.y), Sword_);
     board.setEntity(Position(randomPosBow.x, randomPosBow.y), Bow_);
 
+    initEnemyAlgortihm(board);
+
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         return 1;
     }
@@ -165,11 +167,12 @@ int main(int argc, char *argv[]) {
                 }
                 else if (currentState == GameState::FREE && key == SDL_SCANCODE_ESCAPE) {
                     currentState = GameState::PAUSE;
+                    std::cout << "Game Paused" << std::endl;
                 }
                 else if (currentState == GameState::PAUSE) {
                     if (key == SDL_SCANCODE_ESCAPE) {
                         currentState = GameState::FREE;
-                        std::cout << "== Resume Game ==" << std::endl;
+                        std::cout << "Resume Game" << std::endl;
                     } else if (key == SDL_SCANCODE_RETURN) {
                         quit = true;
                     }
@@ -190,6 +193,7 @@ int main(int argc, char *argv[]) {
             SDL_Delay(20);
         }
         else if (currentState == GameState::FREE){
+
             if (is_key_pressed(SDL_SCANCODE_RIGHT)) {
 			    MoveRight(player.get(), board,renderer,font,playerTexture,mobTexture);
 		    }

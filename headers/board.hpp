@@ -29,8 +29,9 @@ public:
     void DeleteEntity(Position pos);
 
     std::shared_ptr<Entity> getEntityAt(Position pos) const;
-
     EntityType getEntityType(Position pos) const;
+    std::unordered_map<Position,std::shared_ptr<Entity>> getEntities() const;
+
 
     void DrawBoard(SDL_Renderer* renderer,
                    SDL_Texture* PlayerTexture,

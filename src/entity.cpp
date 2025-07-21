@@ -8,9 +8,6 @@ Entity::Entity(EntityType t, double hp, double attack, Position pos) :
 
 Entity::~Entity() = default;
 
-bool Entity::isAlive() const {
-    return hp > 0;
-}
 
 void Entity::setPosition(Position pos) {
     if (pos.x < 0 || pos.y < 0) {
