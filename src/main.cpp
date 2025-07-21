@@ -157,18 +157,25 @@ int main(int argc, char *argv[]) {
                 TTF_Quit();
                 SDL_Quit();
             }
+            else if (e.type == SDL_KEYDOWN) {
+            SDL_Scancode key = e.key.keysym.scancode;
+
+                if (currentState == GameState::TITLE && key == SDL_SCANCODE_SPACE) {
+                    currentState = GameState::FREE;
+                }
+                else if (currentState == GameState::FREE && key == SDL_SCANCODE_ESCAPE) {
+                    currentState = GameState::PAUSE;
+                }
+                else if (currentState == GameState::PAUSE) {
+                    if (key == SDL_SCANCODE_ESCAPE) {
+                        currentState = GameState::FREE;
+                        std::cout << "== Resume Game ==" << std::endl;
+                    } else if (key == SDL_SCANCODE_RETURN) {
+                        quit = true;
+                    }
+                }
+            }
 		}
-
-        if (is_key_pressed(SDL_SCANCODE_ESCAPE)){
-            quit = 1;
-            SDL_DestroyRenderer(renderer);
-            SDL_DestroyWindow(window);
-            TTF_CloseFont(font);
-            TTF_CloseFont(TitleFont);
-            TTF_Quit();
-            SDL_Quit();
-        }
-
         if (currentState == GameState::TITLE){
             if (is_key_pressed(SDL_SCANCODE_SPACE)){
                 currentState = GameState::FREE;
@@ -177,7 +184,12 @@ int main(int argc, char *argv[]) {
             SDL_RenderPresent(renderer);
             SDL_Delay(20);
         }
-        if (currentState == GameState::FREE){
+        else if (currentState == GameState::PAUSE){
+            board.drawPauseScreen(renderer,TitleFont);
+            SDL_RenderPresent(renderer);
+            SDL_Delay(20);
+        }
+        else if (currentState == GameState::FREE){
             if (is_key_pressed(SDL_SCANCODE_RIGHT)) {
 			    MoveRight(player.get(), board,renderer,font,playerTexture,mobTexture);
 		    }
@@ -197,5 +209,11 @@ int main(int argc, char *argv[]) {
             SDL_Delay(80);
         }
     }
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    TTF_CloseFont(font);
+    TTF_CloseFont(TitleFont);
+    TTF_Quit();
+    SDL_Quit();
     return 0;
 }

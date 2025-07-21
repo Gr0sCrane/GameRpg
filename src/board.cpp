@@ -1,4 +1,5 @@
 #include "board.hpp"
+#include "mob.hpp"
 #include <iostream> 
 
 //|==========================|Class Board|===============================================|
@@ -219,5 +220,14 @@ void Board::drawTitleScreen(SDL_Renderer* renderer, TTF_Font* font){
     renderText(renderer, font, "Mini RPG Game", 350, 200,white);
     renderText(renderer, font, "Press SPACE to start", 300, 300,white);
     renderText(renderer,font,"personal project by Mouad, (it sucks)",420,570,white);
+}
+
+void Board::drawPauseScreen(SDL_Renderer* renderer,TTF_Font* font){
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
+    SDL_Color white = {255, 255, 255, 255};
+
+    renderText(renderer,font,"PAUSE",400,200,white);
+    renderText(renderer,font,"Press ENTER to quit the game",260,300,white);
 }
 
