@@ -49,37 +49,6 @@ public:
 
 };
 
-class Mob;
-class Player : public Entity {
-private:
-    Stats stats;
-    Inventory inventory;
-    bool isProtecting = false;
-public:
-    Player(Position pos);
-    Inventory& getInventory();
-    Stats& getStats();
-    const Stats& getStats() const;
-    void attack(std::shared_ptr<Mob> mob);
-    double protect(double attackAmount);
-    bool isPlayerProtecting() const;
-    void setPlayerProtecting(bool e);
-};
-class Mob : public Entity {
-private:
-    std::string mobname;
-    Stats stats;
-    Inventory inventory;
-public:
-    Mob(const std::string& name,Stats stats,Position pos);
-    std::string getMobName() const;
-    void setMobName(const std::string& newName);
-    virtual std::string getClassName() const override;
-    Stats& getStats();
-    const Stats& getStats() const;
-    void attackPlayer(std::shared_ptr<Player> player);
-};
-
 class Heal : public Item {
 private:
     double healAmount;
