@@ -4,7 +4,7 @@ CXXFLAGS = -g -Wall -std=c++17 -fdiagnostics-color=always $(INCLUDES)
 LDFLAGS = -lmingw32 -lSDL2main -lSDL2 -mwindows -lSDL2_ttf -lSDL2_image
 LIBDIRS = -LC:/msys64/ucrt64/lib
 
-SRCS = src/main.cpp src/game_function.cpp src/board.cpp src/classes.cpp src/entity_spawn.cpp src/combat.cpp src/entity.cpp
+SRCS = src/main.cpp src/game_function.cpp src/board.cpp src/classes.cpp src/entity_spawn.cpp src/combat.cpp src/entity.cpp src/player.cpp src/mob.cpp src/algorithm.cpp
 OBJS = $(SRCS:.cpp=.o)
 TARGET = game.exe
 

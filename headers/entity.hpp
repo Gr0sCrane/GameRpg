@@ -22,7 +22,6 @@ class Entity {
     Entity(EntityType t, double hp, double attack, Position pos);
     virtual ~Entity();
     
-    bool isAlive() const;
     virtual std::string getClassName() const;
     
     void setPosition(Position pos);

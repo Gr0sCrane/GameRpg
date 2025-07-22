@@ -29,8 +29,9 @@ public:
     void DeleteEntity(Position pos);
 
     std::shared_ptr<Entity> getEntityAt(Position pos) const;
-
     EntityType getEntityType(Position pos) const;
+    std::unordered_map<Position,std::shared_ptr<Entity>> getEntities() const;
+
 
     void DrawBoard(SDL_Renderer* renderer,
                    SDL_Texture* PlayerTexture,
@@ -43,4 +44,5 @@ public:
     void renderPlayerInfo(SDL_Renderer* renderer, TTF_Font* font, Player* player,Board& board);
     void renderText(SDL_Renderer* renderer, TTF_Font* font, const std::string& text, int x, int y, SDL_Color color);
     void drawTitleScreen(SDL_Renderer* renderer, TTF_Font* font);
+    void drawPauseScreen(SDL_Renderer* renderer,TTF_Font* font);
 };

@@ -18,10 +18,26 @@ void renderText(SDL_Renderer* renderer, TTF_Font* font, const std::string& text,
 	SDL_DestroyTexture(texture);
 }
 
+void getItemInventory(std::shared_ptr<Player> player,SDL_Renderer* renderer,TTF_Font* font){
+
+    auto& item = player->getInventory().getItems();
+    int space = 50; // space between two item
+
+    if (item.size() <= 0){
+        renderText(renderer,font,"- Inventory is empty",50,500,white);
+    } else {
+        for (auto& i : item){
+            std::string itemName = i.get()->getName();
+            renderText(renderer,font,"> " + itemName,0 + space,500,white);
+            space += 100;
+        }
+    }
+}
+
 void displayCombat(SDL_Renderer* renderer, TTF_Font* font,
                    SDL_Texture* playerTexture, SDL_Texture* mobTexture,
                    std::shared_ptr<Player> player, std::shared_ptr<Mob> mob,Turn currentTurn,
-                    int selectedIndex) {
+                    int selectedIndex,bool isInventorySelected) {
     
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
@@ -32,7 +48,7 @@ void displayCombat(SDL_Renderer* renderer, TTF_Font* font,
     SDL_RenderCopy(renderer, playerTexture, NULL, &playerRect);
     SDL_RenderCopy(renderer, mobTexture, NULL, &mobRect);
 
-     // HUD - HP
+    // HUD - HP
     std::string playerHpText = "Player HP: " + std::to_string((int)player->getStats().hp) +
                                "/" + std::to_string(player->getStats().maxHp);
     std::string mobHpText = "Enemy HP: " + std::to_string((int)mob->getStats().hp) +
@@ -51,11 +67,14 @@ void displayCombat(SDL_Renderer* renderer, TTF_Font* font,
     int menuX = 100;
     int menuY = 400;
 
-    for (int i = 0; i < options.size(); i++){
-        //TODO: selectedIndex comparing an int while being a size_t type
-        std::string line = (i == selectedIndex) ? "> " + options[i] : "  " + options[i];
-        SDL_Color color = (i == selectedIndex) ? yellow : white;
+    for (size_t i = 0; i < options.size(); i++){
+        std::string line = (static_cast<int>(i) == selectedIndex) ? "> " + options[i] : "  " + options[i];
+        SDL_Color color = (static_cast<int>(i) == selectedIndex) ? yellow : white;
         renderText(renderer, font, line, menuX + i * 200, menuY, color);
+    }
+
+    if (isInventorySelected){
+        getItemInventory(player,renderer,font);
     }
 
     DisplayRect(renderer,menuX,menuY,options);
@@ -67,8 +86,8 @@ void DisplayRect(SDL_Renderer* renderer,int x, int y,const std::vector<std::stri
     int SpacingX = 200;
     int padding = 10;
 
-     for (int i = 0; i < options.size(); ++i) {
-        int rectX = x + i * SpacingX - padding;
+    for (size_t i = 0; i < options.size(); ++i) {
+        int rectX = x + static_cast<int>(i) * SpacingX - padding;
         int rectY = y - padding;
         int rectW = 100 + 2 * padding;
         int rectH = 30 + 2 * padding;
@@ -87,6 +106,7 @@ void StartFight(Board& board, std::shared_ptr<Player> player, std::shared_ptr<Mo
     Turn currentTurn = Turn::PLAYER;
     player->setPlayerProtecting(false);
     int selectedIndex = 0;
+    bool inventorySelected = false;
 
 
     SDL_Event e;
@@ -99,15 +119,6 @@ void StartFight(Board& board, std::shared_ptr<Player> player, std::shared_ptr<Mo
                 exit(0);
             }
 
-            if (mob->getStats().hp <= 0) { // Enemy defeated
-                isCombatOver = true;
-                player->getStats().gainXp(mob->getStats().level * 3); // Player gain Xp 
-                break;
-            } else if (player->getStats().hp <= 0) { // Player defeated
-                isCombatOver = true;
-                break;
-            }
-
             if (currentTurn == Turn::PLAYER && e.type == SDL_KEYDOWN) {
                 if (e.key.keysym.scancode == SDL_SCANCODE_RIGHT) {
                     selectedIndex = (selectedIndex + 1) % options.size();
@@ -118,16 +129,18 @@ void StartFight(Board& board, std::shared_ptr<Player> player, std::shared_ptr<Mo
                     std::string choice = options[selectedIndex];
 
                     if (choice == "Attack") {
+                        inventorySelected = false;
                         player->attack(mob);
                         player->setPlayerProtecting(false);
                         currentTurn = Turn::MOB;
                     } else if (choice == "Protect") {
+                        inventorySelected = false;
                         player->setPlayerProtecting(true);
                         currentTurn = Turn::MOB;
                     } else if (choice == "Inventory") {
-                        // TODO: Afficher sous-menu inventaire ici
-                        std::cout << "Inventory selected (à implémenter)" << std::endl;
+                        inventorySelected = true;  
                     } else if (choice == "Run") {
+                        inventorySelected = false;
                         std::cout << "Player tried to run..." << std::endl;
                         isCombatOver = true;
                     }
@@ -135,8 +148,17 @@ void StartFight(Board& board, std::shared_ptr<Player> player, std::shared_ptr<Mo
             }
         }
 
-        displayCombat(renderer, font, playerTexture, mobTexture, player, mob, currentTurn, selectedIndex);
+        displayCombat(renderer, font, playerTexture, mobTexture, player, mob, currentTurn, selectedIndex,inventorySelected);
 
+        if (mob->getStats().hp <= 0) { // Enemy defeated
+            isCombatOver = true;
+            player->getStats().gainXp(mob->getStats().level * 3); // Player gain Xp 
+            break;
+        } else if (player->getStats().hp <= 0) { // Player defeated
+            isCombatOver = true;
+            break;
+        }
+        
         // Enemy Turn
         if (currentTurn == Turn::MOB) {
             SDL_Delay(500);
@@ -144,9 +166,10 @@ void StartFight(Board& board, std::shared_ptr<Player> player, std::shared_ptr<Mo
             currentTurn = Turn::PLAYER;
             SDL_Delay(500);
         }
+
     }
 }
 
-//TODO: l'IG + inventaire et meilleur systeme de run. (trop simple pour l'instant)
+//TODO: l'IG + inventaire(50% fini) et meilleur systeme de run. (trop simple pour l'instant)
 
 
