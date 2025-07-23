@@ -6,6 +6,38 @@ SDL_Color green = {15,255,0,0};
 SDL_Color red = {155,0,0,0};
 SDL_Color yellow = {255, 255, 0, 255};
 
+bool running(std::shared_ptr<Player> player){
+
+    int hp = player->getStats().hp;
+    int maxhp = player->getStats().maxHp;
+
+    int randomIntLC = rand() % 2;
+    int randomIntHC = rand() % 6;
+
+    //Full hp case
+    if (hp == maxhp){
+        return true;
+    }
+    //High hp case
+    else if (hp > maxhp){
+        if (randomIntHC == 1){
+            return true;
+        }
+        return false;
+    }
+    //Low hp case
+    else if (hp < maxhp){
+        if (randomIntLC == 0){
+            return false;
+        }
+        return true;
+    } 
+    //Mid hp case
+    else {
+        return ((rand() % 4) == 3);
+    }
+}
+
 void renderText(SDL_Renderer* renderer, TTF_Font* font, const std::string& text, int x, int y, SDL_Color color) {
 	SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), color);
 	if (!surface) return;
@@ -140,9 +172,14 @@ void StartFight(Board& board, std::shared_ptr<Player> player, std::shared_ptr<Mo
                     } else if (choice == "Inventory") {
                         inventorySelected = true;  
                     } else if (choice == "Run") {
-                        inventorySelected = false;
-                        std::cout << "Player tried to run..." << std::endl;
-                        isCombatOver = true;
+                        if (running(player)){
+                            std::cout << "Player tried to run..." << std::endl;
+                            isCombatOver = true;
+                            break;
+                        }
+                        std::cout << "the run failed !" << "\n";
+                        isCombatOver = false;
+                        currentTurn = Turn::MOB;
                     }
                 }
             }
@@ -166,10 +203,9 @@ void StartFight(Board& board, std::shared_ptr<Player> player, std::shared_ptr<Mo
             currentTurn = Turn::PLAYER;
             SDL_Delay(500);
         }
-
     }
 }
 
-//TODO: l'IG + inventaire(50% fini) et meilleur systeme de run. (trop simple pour l'instant)
+//TODO: l'IG + inventaire(50% fini)
 
 
