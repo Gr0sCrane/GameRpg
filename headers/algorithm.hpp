@@ -3,4 +3,5 @@
 #include "mob.hpp"
 #include "board.hpp"
 
-void initEnemyAlgortihm(Board& board);
+int calculateDistance(std::shared_ptr<Mob> mob,std::shared_ptr<Player> player);
+void initEnemyAlgortihm(Board& board,std::shared_ptr<Player> player);

@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
     board.setEntity(Position(randomPosItem.x, randomPosItem.y), Sword_);
     board.setEntity(Position(randomPosBow.x, randomPosBow.y), Bow_);
 
-    initEnemyAlgortihm(board);
+    initEnemyAlgortihm(board,player);
 
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         return 1;
