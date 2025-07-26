@@ -10,9 +10,17 @@
 
 class Board;
 
-
 void HealPlayer(std::shared_ptr<Player> player,int amount);
 void HealPlayerOnItem(std::shared_ptr<Player> player,Board& board,Position pos);
+
+void MoveDirection(std::shared_ptr<Entity> entity,
+				    Direction direction,
+					Board& board,
+					SDL_Renderer* renderer,
+					TTF_Font* font,
+					SDL_Texture* playerTexture,
+					SDL_Texture* mobTexture);
+
 void MoveRight(Entity* entity, Board& board,
                SDL_Renderer* renderer,
                TTF_Font* font,

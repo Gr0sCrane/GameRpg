@@ -42,7 +42,7 @@ void initEnemyAlgortihm(Board &board, std::shared_ptr<Player> player)
             {
                 int distance = calculateDistance(mob, player);
                 std::string name = mob->getMobName();
-                
+
                 /*DEBUG ON CONSOLE*/
                 std::cout << "Distance to " << name << " : " << distance << "\n";
             }

@@ -27,5 +27,5 @@ public:
     void setPatrol();
     void setChase();
     void patrol(Board& board);
-    void chase(std::shared_ptr<Player> player);
+    void chase(std::shared_ptr<Player> player,int distance,Board& board);
 };

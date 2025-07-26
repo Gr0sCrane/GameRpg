@@ -3,6 +3,34 @@
 #include "board.hpp"
 #include "combat.hpp"
 
+Position getDirection(int posX, int posY, Direction dir){
+	switch (dir)
+	{
+	case Direction::RIGHT:
+		posY += 1;
+		if (posY >= kBoardSize) posY = 0;
+		break;
+	case Direction::LEFT:
+		posY -= 1;
+		if (posY < 0) posY = kBoardSize -1;
+		break;
+	case Direction::UP:
+		posX -= 1;
+		if (posX < 0) {
+			posX = kBoardSize - 1;
+		}
+		break;
+	case Direction::DOWN:
+		posX += 1;
+		if (posX >= kBoardSize) {
+        	posX = 0;
+    	}
+	default:
+		break;
+	}
+	return Position(posX,posY);
+}
+
 void HealPlayer(std::shared_ptr<Player> player, int amount) {
 	if (amount < 0) {
 		return;
@@ -22,140 +50,49 @@ void HealPlayerOnItem(std::shared_ptr<Player> player, Board& board, Position pos
 	}
 }
 
-void MoveRight(Entity* entity, Board& board,
-               SDL_Renderer* renderer,
-               TTF_Font* font,
-               SDL_Texture* playerTexture,
-               SDL_Texture* mobTexture) {
+void MoveDirection(std::shared_ptr<Entity> entity,
+				    Direction direction,
+					Board& board,
+					SDL_Renderer* renderer,
+					TTF_Font* font,
+					SDL_Texture* playerTexture,
+					SDL_Texture* mobTexture){
 
-    std::shared_ptr<Player> player = std::dynamic_pointer_cast<Player>(board.getEntityAt(entity->getPosition()));
-    if (!player) return;
+	auto pos = entity->getPosition();
 
-    auto pos = player->getPosition();
-    int newX = pos.x;
-    int newY = pos.y + 1;
-    if (newY >= kBoardSize) newY = 0;
+	Position targetPos = getDirection(pos.x,pos.y,direction);
 
-	Position targetpos = Position(newX,newY); // New position
+	Entity* target = board.getEntityAt(targetPos).get();
 
-	Entity* target = board.getEntityAt(targetpos).get();
-	if (dynamic_cast<Heal*>(target)) {
-    	HealPlayerOnItem(player, board,Position(newX,newY));
-	} else if (board.getEntityType(targetpos) == EntityType::ITEM) {
-    	CollectItem(player,board,targetpos);
-	} else if (isMobAt(targetpos,board)){
-		std::shared_ptr<Mob> MobTarget = std::dynamic_pointer_cast<Mob>(board.getEntityAt(targetpos));
-		StartFight(board,player,MobTarget,renderer,font,playerTexture,mobTexture);
+	if (entity->getType() == EntityType::PLAYER){
+		auto player = std::dynamic_pointer_cast<Player>(entity);
+		if (!player){
+			return;
+		}
+		
+		if(dynamic_cast<Heal*>(target)){
+			HealPlayerOnItem(player,board,targetPos);
+		} else if (board.getEntityType(targetPos) == EntityType::ITEM) {
+			CollectItem(player,board,targetPos);
+		} else if (isMobAt(targetPos,board)){
+			auto mob = std::dynamic_pointer_cast<Mob>(board.getEntityAt(targetPos));
+			StartFight(board,player,mob,renderer,font,playerTexture,mobTexture);
+		}
 	}
 
-    board.setEntity(targetpos, player);
-    board.setEntity(Position(pos.x,pos.y), nullptr);
-    player->setPosition(targetpos);
+	if (entity->getType() == EntityType::MOB){
+		if (board.getEntityType(targetPos) == EntityType::PLAYER) {
+            auto player = std::dynamic_pointer_cast<Player>(board.getEntityAt(targetPos));
+            auto mob = std::dynamic_pointer_cast<Mob>(entity);
+            StartFight(board, player, mob, renderer, font, playerTexture, mobTexture);
+        }
+	}
+
+	board.setEntity(targetPos,entity);
+	board.setEntity(pos,nullptr);
+	entity->setPosition(targetPos);
+
 }
-
-
-void MoveLeft(Entity* entity, Board& board,
-               SDL_Renderer* renderer,
-               TTF_Font* font,
-               SDL_Texture* playerTexture,
-               SDL_Texture* mobTexture) {
-
-	std::shared_ptr<Player> player = std::dynamic_pointer_cast<Player>(board.getEntityAt(entity->getPosition()));
-    if (!player) return;
-    auto pos = player->getPosition();
-    int newX = pos.x;
-    int newY = pos.y - 1;
-
-    if (newY < 0){
-        newY = kBoardSize - 1;
-	}
-
-	Position targetpos = Position(newX,newY);
-
-	Entity* target = board.getEntityAt(targetpos).get();
-	if (dynamic_cast<Heal*>(target)) {
-    	HealPlayerOnItem(player, board,targetpos);
-	} else if (board.getEntityType(targetpos) == EntityType::ITEM) {
-    	CollectItem(player, board,targetpos);
-	} else if (isMobAt(targetpos,board)){
-		std::shared_ptr<Mob> MobTarget = std::dynamic_pointer_cast<Mob>(board.getEntityAt(targetpos));
-		StartFight(board,player,MobTarget,renderer,font,playerTexture,mobTexture);
-	}
-
-    board.setEntity(targetpos, player);
-	board.setEntity(Position(pos.x,pos.y), nullptr); // Clear old position
-	player->setPosition(targetpos);
-}
-
-
-void MoveUp(Entity* entity, Board& board,
-               SDL_Renderer* renderer,
-               TTF_Font* font,
-               SDL_Texture* playerTexture,
-               SDL_Texture* mobTexture) {
-
-	std::shared_ptr<Player> player = std::dynamic_pointer_cast<Player>(board.getEntityAt(entity->getPosition()));
-    if (!player) return;
-	auto pos = player->getPosition();
-	int newX = pos.x - 1;
-	int newY = pos.y;
-
-	if (newX < 0) {
-		newX = kBoardSize - 1;
-	}
-
-	Position targetpos = Position(newX,newY);
-
-	Entity* target = board.getEntityAt(targetpos).get();
-	if (dynamic_cast<Heal*>(target)) {
-    	HealPlayerOnItem(player, board,Position(newX,newY));
-	} else if (board.getEntityType(targetpos) == EntityType::ITEM) {
-    	CollectItem(player, board,targetpos);
-	} else if (isMobAt(targetpos,board)){
-		std::shared_ptr<Mob> MobTarget = std::dynamic_pointer_cast<Mob>(board.getEntityAt(targetpos));
-		StartFight(board,player,MobTarget,renderer,font,playerTexture,mobTexture);
-	}
-	
-	board.setEntity(targetpos, player);
-	board.setEntity(Position(pos.x,pos.y), nullptr); // Clear old position
-	player->setPosition(targetpos);
-}
-
-void MoveDown(Entity* entity, Board& board,
-               SDL_Renderer* renderer,
-               TTF_Font* font,
-               SDL_Texture* playerTexture,
-               SDL_Texture* mobTexture) {
-
-    std::shared_ptr<Player> player = std::dynamic_pointer_cast<Player>(board.getEntityAt(entity->getPosition()));
-    if (!player) return;
-
-    auto pos = player->getPosition();
-    int newX = pos.x + 1;
-    int newY = pos.y;
-
-    if (newX >= kBoardSize) {
-        newX = 0;
-    }
-
-	Position targetpos = Position(newX,newY);
-
-    Entity* target = board.getEntityAt(targetpos).get();
-	if (dynamic_cast<Heal*>(target)) {
-    	HealPlayerOnItem(player, board,targetpos);
-	} else if (board.getEntityType(targetpos) == EntityType::ITEM) {
-    	CollectItem(player, board, targetpos);
-	} else if (isMobAt(targetpos,board)){
-		std::shared_ptr<Mob> MobTarget = std::dynamic_pointer_cast<Mob>(board.getEntityAt(targetpos));
-		StartFight(board,player,MobTarget,renderer,font,playerTexture,mobTexture);
-	}
-
-
-    board.setEntity(targetpos, player);
-    board.setEntity(Position(pos.x,pos.y), nullptr); // Clear old position
-    player->setPosition(targetpos);
-}
-
 
 void CollectItem(std::shared_ptr<Player> player, Board& board,Position pos) {
 	Position entity_pos = Position(pos.x,pos.y);

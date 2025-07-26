@@ -46,13 +46,21 @@ std::unordered_map<Position,std::shared_ptr<Entity>> Board::getEntities() const 
     return entities;
 }
 
-EntityType Board::getEntityType(Position pos) const {
 
+EntityType Board::getEntityType(Position pos) const {
+    
     auto it = entities.find(pos);
     if (it != entities.end() && it->second){
         return it->second->getType();
     }
     return EntityType::VOID;
+}
+
+bool Board::isWalkable(Position pos){
+    if (getEntityType(pos) != EntityType::VOID){
+        return false;
+    }
+    return true;
 }
 
 void Board::DrawBoard(SDL_Renderer* renderer,

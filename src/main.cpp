@@ -194,18 +194,11 @@ int main(int argc, char *argv[]) {
         }
         else if (currentState == GameState::FREE){
 
-            if (is_key_pressed(SDL_SCANCODE_RIGHT)) {
-			    MoveRight(player.get(), board,renderer,font,playerTexture,mobTexture);
-		    }
-		    if (is_key_pressed(SDL_SCANCODE_LEFT)) {
-			    MoveLeft(player.get(), board,renderer,font,playerTexture,mobTexture);
-		    }
-		    if (is_key_pressed(SDL_SCANCODE_UP)) {
-			    MoveUp(player.get(), board,renderer,font,playerTexture,mobTexture);
-		    }
-		    if (is_key_pressed(SDL_SCANCODE_DOWN)) {
-			    MoveDown(player.get(), board,renderer,font,playerTexture,mobTexture);
-		    }
+            for (const auto& [key, dir] : keyToDirection) {
+                if (is_key_pressed(key)) {
+                    MoveDirection(player, dir, board, renderer, font, playerTexture, mobTexture);
+                }
+            }
 		    board.DrawBoard(renderer, playerTexture,swordTexture,bowTexture,mobTexture,healTexture);
 		    board.DrawInfo(renderer, player.get());
             board.renderPlayerInfo(renderer,font,player.get(),board);

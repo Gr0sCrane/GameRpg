@@ -45,3 +45,7 @@ void Mob::setChase(){
 void Mob::setPatrol(){
     currentState = Enemystate::PATROL;
 }
+
+void Mob::chase(std::shared_ptr<Player> player,int distance,Board& board){
+    
+}
