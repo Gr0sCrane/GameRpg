@@ -31,8 +31,6 @@ std::vector<std::pair<Position, std::shared_ptr<Entity>>> initEnemyAlgortihm(Boa
             enemies.push_back({position, entity});
         }
     }
-    std::cout << "///DEBUG CONSOLE///" << "\n";
-    std::cout << "Number of enemies on board: " << enemies.size() << "\n";
     return enemies;
 }
 
@@ -50,12 +48,9 @@ void setAlgorithm(std::shared_ptr<Player> player,Board& board,SDL_Renderer* rend
                 int distance = calculateDistance(mob,player);
                 std::string name = mob->getMobName();
 
-                /*DEBUG ON CONSOLE*/
-                std::cout << "Distance to " << name << " : " << distance << "\n";
-
-                if (distance <= 5){
+                if (distance <= 4){
                     mob->setChase();
-                    mob->chase(player,distance,board,renderer,font,playerTexture,mobTexture);
+                    mob->chase(player,board,renderer,font,playerTexture,mobTexture);
                 } else {
                     mob->setPatrol();
                     mob->patrol(board,renderer,font,playerTexture,mobTexture);

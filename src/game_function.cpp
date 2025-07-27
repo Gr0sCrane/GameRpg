@@ -87,6 +87,8 @@ void MoveDirection(std::shared_ptr<Entity> entity,
             auto player = std::dynamic_pointer_cast<Player>(board.getEntityAt(targetPos));
             auto mob = std::dynamic_pointer_cast<Mob>(entity);
             StartFight(board, player, mob, renderer, font, playerTexture, mobTexture);
+			board.setEntity(pos,nullptr);
+			return;
         }
 	}
 

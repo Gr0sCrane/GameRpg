@@ -28,7 +28,7 @@ public:
     void setChase();
     void patrol(Board& board,SDL_Renderer* renderer,TTF_Font* font,SDL_Texture* playerTexture,
                 SDL_Texture* mobTexture);
-    void chase(std::shared_ptr<Player> player,int distance,Board& board,
+    void chase(std::shared_ptr<Player> player,Board& board,
                 SDL_Renderer* renderer,TTF_Font* font,SDL_Texture* playerTexture,
                 SDL_Texture* mobTexture);
 };

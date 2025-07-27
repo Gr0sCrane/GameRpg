@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
 	board.setEntity(Position(kBoardSize/2,kBoardSize/2), player);
     board.setEntity(Position(2,16), Heal_);
     board.setEntity(Position(5,10),Heal2_);
-    board.setEntity(Position(10,13),Mob3);
+    board.setEntity(Position(15,15),Mob3);
     board.setEntity(Position(2,2),Mob4);
     
     Position randomPos = generateRandomPosition(kBoardSize, board);
@@ -152,12 +152,6 @@ int main(int argc, char *argv[]) {
     while (!quit) {
         while (SDL_PollEvent(&e)) {
             
-            Uint32 currentTime = SDL_GetTicks();
-            if (currentState == GameState::FREE && currentTime - lastEnemyUpdate > enemyUpdateInterval) {
-                setAlgorithm(player, board, renderer, font, playerTexture, mobTexture);
-                lastEnemyUpdate = currentTime;
-            }
-
             if (e.type == SDL_QUIT){
                 quit = 1;
                 SDL_DestroyRenderer(renderer);
@@ -202,6 +196,13 @@ int main(int argc, char *argv[]) {
         }
         else if (currentState == GameState::FREE){
 
+            // UPDATE
+            Uint32 currentTime = SDL_GetTicks();
+            if (currentTime - lastEnemyUpdate > enemyUpdateInterval) {
+                setAlgorithm(player, board, renderer, font, playerTexture, mobTexture);
+                lastEnemyUpdate = currentTime;
+            }
+
             for (const auto& [key, dir] : keyToDirection) {
                 if (is_key_pressed(key)) {
                     MoveDirection(player, dir, board, renderer, font, playerTexture, mobTexture);
@@ -214,12 +215,6 @@ int main(int argc, char *argv[]) {
             SDL_Delay(80);
         }
 
-        // UPDATE
-        Uint32 currentTime = SDL_GetTicks();
-        if (currentTime - lastEnemyUpdate > enemyUpdateInterval) {
-            setAlgorithm(player, board, renderer, font, playerTexture, mobTexture);
-            lastEnemyUpdate = currentTime;
-        }
     }
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
