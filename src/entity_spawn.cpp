@@ -41,20 +41,17 @@ std::string generateRandomName(){
     return names[randint];
 }
 
-int playerBasedHp(std::shared_ptr<Player> player){
+int playerBasedHp(std::shared_ptr<Player> player) {
+    int baseHp = 10;
     int lvl = player->getStats().level;
-    if(lvl <= 1){
-        return 25;
-    } else {
-        return lvl * 1.25;
-    }
+    return baseHp + static_cast<int>((lvl - 1) * 5 * 1.25);
 }
 
 double playerBasedAttack(std::shared_ptr<Player> player){
     double attack = player->getStats().attack;
     int lvl = player->getStats().attack;
     if (lvl > 1){
-        return attack * 1.25;
+        return attack * 0.55;
     }
     return 2.0;
 }
@@ -68,7 +65,11 @@ double playerBasedDefense(std::shared_ptr<Player> player){
     return 2.0;
 }
 
-
+double playerBasedHealAmmount(std::shared_ptr<Player> player){
+    
+    int hp = player->getStats().maxHp;
+    return hp / 1.5;
+}
 
 void spawnEnemy(Board& board,std::shared_ptr<Player> player){
 
@@ -82,11 +83,26 @@ void spawnEnemy(Board& board,std::shared_ptr<Player> player){
 
     auto enemy1 = std::make_shared<Mob>(name1,Stats(enemyHp,enemyAttack,enemyDefense),kDefault_pos);
     auto enemy2 = std::make_shared<Mob>(name2,Stats(enemyHp,enemyAttack,enemyDefense),kDefault_pos);
-    auto enemy3 = std::make_shared<Mob>(name3,Stats(enemyHp,enemyAttack,enemyDefense),kDefault_pos);
+    auto enemy3 = std::make_shared<Mob>(name3,Stats(enemyHp,enemyAttack,enemyDefense),kDefault_pos);;
+
+
 
     board.setEntity(generateRandomPosition(kBoardSize, board), std::static_pointer_cast<Entity>(enemy1));
     board.setEntity(generateRandomPosition(kBoardSize, board), std::static_pointer_cast<Entity>(enemy2));
     board.setEntity(generateRandomPosition(kBoardSize, board), std::static_pointer_cast<Entity>(enemy3));
 
+}
+
+void spawnHeal(Board& board,std::shared_ptr<Player> player){
+
+    if(board.getHealInBoard().empty()){
+        int playerHp = player->getStats().hp;
+        int playerMaxHp = player->getStats().maxHp;
     
+        if (playerHp <= playerMaxHp/2){
+            double amount = playerBasedHealAmmount(player);
+            auto potionHeal = std::make_shared<Heal>("Heal", amount, kDefault_pos);
+            board.setEntity(generateRandomItemPosition(kBoardSize,board),potionHeal);
+        }
+    }
 }

@@ -13,3 +13,4 @@ int playerBasedHp(std::shared_ptr<Player> player);
 double playerBasedAttack(std::shared_ptr<Player> player);
 double playerBasedDefense(std::shared_ptr<Player> player);
 void spawnEnemy(Board& board,std::shared_ptr<Player> player);
+void spawnHeal(Board& board,std::shared_ptr<Player> player);

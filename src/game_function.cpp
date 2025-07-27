@@ -98,14 +98,26 @@ void MoveDirection(std::shared_ptr<Entity> entity,
 
 }
 
-void CollectItem(std::shared_ptr<Player> player, Board& board,Position pos) {
-	Position entity_pos = Position(pos.x,pos.y);
-    Entity* entity = board.getEntityAt(entity_pos).get();
-    Item* item = dynamic_cast<Item*>(entity);
-    if (item) {
-        board.setEntity(entity_pos, nullptr); // Remove from board
-        player->getInventory().addItem(std::unique_ptr<Item>(item));
+void CollectItem(std::shared_ptr<Player> player, Board& board, Position pos) {
+    
+    auto entityPtr = board.getEntityAt(pos);
+    if (!entityPtr) {
+        std::cerr << "No entity in this position" << std::endl;
+        return;
     }
+    auto itemPtr = std::dynamic_pointer_cast<Item>(entityPtr);
+    if (!itemPtr) {
+        std::cerr << "Entity is not an Item" << std::endl;
+        return;
+    }
+    bool added = player->getInventory().addItem(itemPtr);
+    if (!added) {
+        std::cerr << "Inventory full" << std::endl;
+        return;
+    }
+    board.setEntity(pos, nullptr);
+    
+    std::cout << "Item " << itemPtr->getName() << " collected" << std::endl;
 }
 
 bool IsPlayerNearMob(Player* player, Board& board) {

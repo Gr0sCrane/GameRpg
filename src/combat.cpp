@@ -55,11 +55,11 @@ void getItemInventory(std::shared_ptr<Player> player,SDL_Renderer* renderer,TTF_
     auto& item = player->getInventory().getItems();
     int space = 50; // space between two item
 
-    if (item.size() <= 0){
+    if (item.empty()){
         renderText(renderer,font,"- Inventory is empty",50,500,white);
     } else {
         for (auto& i : item){
-            std::string itemName = i.get()->getName();
+            std::string itemName = i->getName();
             renderText(renderer,font,"> " + itemName,0 + space,500,white);
             space += 100;
         }
@@ -90,7 +90,7 @@ void displayCombat(SDL_Renderer* renderer, TTF_Font* font,
 
 
     if (currentTurn == Turn::MOB){
-        renderText(renderer,font,"Enemy is attacking",250,100,red);
+        renderText(renderer,font, mob->getMobName() + " is attacking",250,100,red);
     } else {
         renderText(renderer,font,"Player turn",250,100,white);
     }
@@ -206,6 +206,6 @@ void StartFight(Board& board, std::shared_ptr<Player> player, std::shared_ptr<Mo
     }
 }
 
-//TODO: l'IG + inventaire(50% fini)
+//TODO: inventaire(50% fini)
 
 

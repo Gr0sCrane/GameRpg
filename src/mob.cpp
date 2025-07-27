@@ -1,8 +1,8 @@
 #include <iostream>
 #include "mob.hpp"
 
-Mob::Mob(const std::string& name,Stats Stats,Position pos) : Entity(EntityType::MOB,25.0,3.0,pos), mobname(name),
-    stats(25.0,3.0,0),
+Mob::Mob(const std::string& name,Stats Stats,Position pos) : Entity(EntityType::MOB,Stats.hp,Stats.attack,pos), mobname(name),
+    stats(Stats),
     inventory() {}
 std::string Mob::getClassName() const { return "Mob"; }
 std::string Mob::getMobName() const { return mobname; }

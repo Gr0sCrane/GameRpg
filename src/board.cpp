@@ -84,6 +84,21 @@ std::vector<std::pair<Position, std::shared_ptr<Entity>>> Board::getEnemiesInBoa
     return enemies;
 }
 
+std::vector<std::pair<Position, std::shared_ptr<Entity>>> Board::getHealInBoard() const{
+
+    std::vector<std::pair<Position, std::shared_ptr<Entity>>> Heals;
+    
+    for (const auto &[position, entity] : entities)
+    {
+        if (entity->getType() == EntityType::ITEM){
+            if (dynamic_cast<Heal*>(entity.get())){
+                Heals.push_back({position, entity});
+            }
+        }
+    }
+    return Heals;
+}
+
 
 EntityType Board::getEntityType(Position pos) const {
     

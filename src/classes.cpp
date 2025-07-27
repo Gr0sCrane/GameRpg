@@ -6,8 +6,6 @@
 Item::Item(const std::string& itemName,Position pos)
     : Entity(EntityType::ITEM, 0, 0, pos), name(itemName) {}
 
-Item::~Item() = default;
-
 std::string Item::getName() const { return name; }
 void Item::setName(const std::string& newName) { name = newName; }
 
@@ -15,18 +13,21 @@ void Item::setName(const std::string& newName) { name = newName; }
 
 Inventory::Inventory(){};
 
-bool Inventory::addItem(std::unique_ptr<Item> item){
-    if (items.size() >= MAX_INV_SIZE){
+bool Inventory::addItem(std::shared_ptr<Item> item) {
+    if (!item) {
+        std::cerr << "Tentative d'ajout d'un item nul" << std::endl;
         return false;
     }
-    items.push_back(std::move(item));
+    if (items.size() >= MAX_INV_SIZE) return false;
+    
+    items.push_back(item);
     return true;
 }
 
-void Inventory::removeItem(const std::string& itemName){
-    for (auto i = items.begin(); i != items.end(); ++i){
-        if ((*i)->getName() == itemName){
-            items.erase(i);
+void Inventory::removeItem(const std::string& itemName) {
+    for (auto it = items.begin(); it != items.end(); ++it) {
+        if ((*it)->getName() == itemName) {
+            items.erase(it);
             return;
         }
     }
@@ -39,9 +40,9 @@ void Inventory::removeFirstItem(){
     }
 }
 
-const std::vector<std::unique_ptr<Item>>& Inventory::getItems() const {
+const std::vector<std::shared_ptr<Item>>& Inventory::getItems() const {
     return items;
-} 
+}
 
 size_t Inventory::getSize() const {
     return items.size();

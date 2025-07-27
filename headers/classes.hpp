@@ -6,26 +6,27 @@
 #include "entity.hpp"
 
 class Item : public Entity {
-    private:
+private:
     std::string name;
-    public:
+public:
     Item(const std::string& itemName,Position pos);
-    virtual ~Item() override;
-    
+    virtual ~Item() = default;
+
+    virtual std::unique_ptr<Item> clone() const = 0;
     std::string getName() const;
     void setName(const std::string& newName);
 };
 
 class Inventory {
 private:
-    std::vector<std::unique_ptr<Item>> items;
+    std::vector<std::shared_ptr<Item>> items;
     static constexpr size_t MAX_INV_SIZE = 5;
 public:
     Inventory();
-    bool addItem(std::unique_ptr<Item> item);
+    bool addItem(std::shared_ptr<Item> item);
     void removeItem(const std::string& name);
     void removeFirstItem();
-    const std::vector<std::unique_ptr<Item>>& getItems() const;
+    const std::vector<std::shared_ptr<Item>>& getItems() const;
     size_t getSize() const;
     size_t getMaxSize() const;
     bool isEmpty();
@@ -57,6 +58,10 @@ public:
     double getHealAmount() const;
     void setHealAmount(double newAmount);
     virtual std::string getClassName() const override;
+
+    virtual std::unique_ptr<Item> clone() const override {
+        return std::make_unique<Heal>(*this);
+    }
 };
 
 class Weapon : public Item {
@@ -72,6 +77,10 @@ class Sword : public Weapon {
 public:
     Sword(const std::string& itemName, double attack, Position pos);
     virtual std::string getClassName() const override;
+
+    virtual std::unique_ptr<Item> clone() const override {
+        return std::make_unique<Sword>(*this);
+    }
 };
 
 class Bow : public Weapon {
@@ -82,4 +91,8 @@ public:
     double getRange() const;
     void setRange(double newRange);
     virtual std::string getClassName() const override;
+
+    virtual std::unique_ptr<Item> clone() const override {
+        return std::make_unique<Bow>(*this);
+    }
 };
