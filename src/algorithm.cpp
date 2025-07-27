@@ -24,13 +24,7 @@ std::vector<std::pair<Position, std::shared_ptr<Entity>>> initEnemyAlgortihm(Boa
         return {};
     }
 
-    for (const auto &[position, entity] : entities)
-    {
-        if (entity->getType() == EntityType::MOB)
-        {
-            enemies.push_back({position, entity});
-        }
-    }
+    enemies = board.getEnemiesInBoard();
     return enemies;
 }
 
@@ -48,11 +42,9 @@ void setAlgorithm(std::shared_ptr<Player> player,Board& board,SDL_Renderer* rend
                 int distance = calculateDistance(mob,player);
                 std::string name = mob->getMobName();
 
-                if (distance <= 4){
-                    mob->setChase();
+                if (distance <= 5){
                     mob->chase(player,board,renderer,font,playerTexture,mobTexture);
                 } else {
-                    mob->setPatrol();
                     mob->patrol(board,renderer,font,playerTexture,mobTexture);
                 }
             }

@@ -8,10 +8,9 @@ int main(int argc, char *argv[]) {
 	Board board;
 
 	auto player = std::make_shared<Player>(kDefault_pos);
-    auto Mob1 = std::make_shared<Mob>("Teto", Stats(50,2), kDefault_pos);
-    auto Mob2 = std::make_shared<Mob>("Miku", Stats(50,2), kDefault_pos);
-    auto Mob3 = std::make_shared<Mob>("Rarez",Stats(50,2),kDefault_pos);
-    auto Mob4 = std::make_shared<Mob>("Neru",Stats(50,2),kDefault_pos);
+
+    spawnEnemy(board,player);
+
     auto Sword_ = std::make_shared<Sword>("Sword", 5, kDefault_pos);
     auto Bow_ = std::make_shared<Bow>("Bow", 2, 5, kDefault_pos);
     auto Heal_ = std::make_shared<Heal>("Heal", 25, kDefault_pos);
@@ -20,16 +19,10 @@ int main(int argc, char *argv[]) {
 	board.setEntity(Position(kBoardSize/2,kBoardSize/2), player);
     board.setEntity(Position(2,16), Heal_);
     board.setEntity(Position(5,10),Heal2_);
-    board.setEntity(Position(15,15),Mob3);
-    board.setEntity(Position(2,2),Mob4);
     
-    Position randomPos = generateRandomPosition(kBoardSize, board);
-    Position randomPos2 = generateRandomPosition(kBoardSize, board);
     Position randomPosItem = generateRandomItemPosition(kBoardSize, board);
     Position randomPosBow = generateRandomItemPosition(kBoardSize, board);
     
-    board.setEntity(Position(randomPos.x,randomPos.y), Mob1);
-    board.setEntity(Position(randomPos2.x, randomPos2.y), Mob2);
     board.setEntity(Position(randomPosItem.x, randomPosItem.y), Sword_);
     board.setEntity(Position(randomPosBow.x, randomPosBow.y), Bow_);
 
@@ -208,6 +201,11 @@ int main(int argc, char *argv[]) {
                     MoveDirection(player, dir, board, renderer, font, playerTexture, mobTexture);
                 }
             }
+
+            if(board.getEnemiesInBoard().empty()){
+                spawnEnemy(board,player);
+            }
+
 		    board.DrawBoard(renderer, playerTexture,swordTexture,bowTexture,mobTexture,healTexture);
 		    board.DrawInfo(renderer, player.get());
             board.renderPlayerInfo(renderer,font,player.get(),board);

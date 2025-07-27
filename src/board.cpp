@@ -34,7 +34,7 @@ Board::~Board() = default;
 
 void Board::setEntity(Position pos, std::shared_ptr<Entity> entity) {
     if (pos.x >= 0 && pos.y < kBoardSize &&
-        pos.x >= 0 && pos.y < kBoardSize) {
+        pos.y >= 0 && pos.y < kBoardSize) {
 
         if (entity) {
             entity->setPosition(pos);
@@ -68,6 +68,20 @@ void Board::DeleteEntity(Position pos) {
 
 std::unordered_map<Position,std::shared_ptr<Entity>> Board::getEntities() const {
     return entities;
+}
+
+std::vector<std::pair<Position, std::shared_ptr<Entity>>> Board::getEnemiesInBoard() const{
+
+    std::vector<std::pair<Position, std::shared_ptr<Entity>>> enemies;
+    
+    for (const auto &[position, entity] : entities)
+    {
+        if (entity->getType() == EntityType::MOB)
+        {
+            enemies.push_back({position, entity});
+        }
+    }
+    return enemies;
 }
 
 

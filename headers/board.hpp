@@ -33,6 +33,7 @@ public:
     std::shared_ptr<Entity> getEntityAt(Position pos) const;
     EntityType getEntityType(Position pos) const;
     std::unordered_map<Position,std::shared_ptr<Entity>> getEntities() const;
+    std::vector<std::pair<Position, std::shared_ptr<Entity>>> getEnemiesInBoard() const;
     bool isWalkable(Position pos);
 
     void DrawBoard(SDL_Renderer* renderer,
