@@ -2,6 +2,30 @@
 #include "mob.hpp"
 #include <iostream> 
 
+Direction getRandDir(){
+    int nbr = rand() % 4;
+
+    switch (nbr)
+    {
+    case 0:
+        return Direction::DOWN;
+        break;
+    case 1:
+        return Direction::UP;
+        break;
+    case 2:
+        return Direction::LEFT;
+        break;
+    case 3:
+        return Direction::RIGHT;
+        break;
+    
+    default:
+        return Direction::NONE;
+        break;
+    }
+}
+
 //|==========================|Class Board|===============================================|
 
 Board::Board() {}
@@ -57,7 +81,7 @@ EntityType Board::getEntityType(Position pos) const {
 }
 
 bool Board::isWalkable(Position pos){
-    if (getEntityType(pos) != EntityType::VOID){
+    if (getEntityType(pos) != EntityType::VOID && getEntityType(pos) != EntityType::PLAYER){
         return false;
     }
     return true;

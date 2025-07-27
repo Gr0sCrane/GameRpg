@@ -33,8 +33,6 @@ int main(int argc, char *argv[]) {
     board.setEntity(Position(randomPosItem.x, randomPosItem.y), Sword_);
     board.setEntity(Position(randomPosBow.x, randomPosBow.y), Bow_);
 
-    initEnemyAlgortihm(board,player);
-
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         return 1;
     }
@@ -143,13 +141,23 @@ int main(int argc, char *argv[]) {
     SDL_FreeSurface(MobSurface);
     SDL_FreeSurface(HealSurface);
 
+
     // Set the Gamestate in Title screen
     GameState currentState = GameState::TITLE;
+    Uint32 lastEnemyUpdate = SDL_GetTicks();
+    const Uint32 enemyUpdateInterval = 800;
 
     SDL_Event e;
     int quit = 0;
     while (!quit) {
         while (SDL_PollEvent(&e)) {
+            
+            Uint32 currentTime = SDL_GetTicks();
+            if (currentState == GameState::FREE && currentTime - lastEnemyUpdate > enemyUpdateInterval) {
+                setAlgorithm(player, board, renderer, font, playerTexture, mobTexture);
+                lastEnemyUpdate = currentTime;
+            }
+
             if (e.type == SDL_QUIT){
                 quit = 1;
                 SDL_DestroyRenderer(renderer);
@@ -204,6 +212,13 @@ int main(int argc, char *argv[]) {
             board.renderPlayerInfo(renderer,font,player.get(),board);
 		    SDL_RenderPresent(renderer);
             SDL_Delay(80);
+        }
+
+        // UPDATE
+        Uint32 currentTime = SDL_GetTicks();
+        if (currentTime - lastEnemyUpdate > enemyUpdateInterval) {
+            setAlgorithm(player, board, renderer, font, playerTexture, mobTexture);
+            lastEnemyUpdate = currentTime;
         }
     }
     SDL_DestroyRenderer(renderer);

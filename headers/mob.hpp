@@ -9,7 +9,7 @@ enum class Enemystate {
     CHASE // the enemy chase the nearest player
 };
 
-class Mob : public Entity {
+class Mob : public Entity, public std::enable_shared_from_this<Mob> {
 private:
     std::string mobname;
     Stats stats;
@@ -26,6 +26,9 @@ public:
     Enemystate getCurrentState() const;
     void setPatrol();
     void setChase();
-    void patrol(Board& board);
-    void chase(std::shared_ptr<Player> player,int distance,Board& board);
+    void patrol(Board& board,SDL_Renderer* renderer,TTF_Font* font,SDL_Texture* playerTexture,
+                SDL_Texture* mobTexture);
+    void chase(std::shared_ptr<Player> player,int distance,Board& board,
+                SDL_Renderer* renderer,TTF_Font* font,SDL_Texture* playerTexture,
+                SDL_Texture* mobTexture);
 };

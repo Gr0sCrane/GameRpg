@@ -12,6 +12,8 @@
 const int kBoardSize = 19;
 const int kTilesize = 32;
 
+Direction getRandDir();
+
 /**
  * @class Board
  * @brief this class contains the board and all the entities of the game

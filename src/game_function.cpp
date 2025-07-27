@@ -69,7 +69,6 @@ void MoveDirection(std::shared_ptr<Entity> entity,
 		if (!player){
 			return;
 		}
-		
 		if(dynamic_cast<Heal*>(target)){
 			HealPlayerOnItem(player,board,targetPos);
 		} else if (board.getEntityType(targetPos) == EntityType::ITEM) {
@@ -81,6 +80,9 @@ void MoveDirection(std::shared_ptr<Entity> entity,
 	}
 
 	if (entity->getType() == EntityType::MOB){
+		if (!board.isWalkable(targetPos)){
+			return;
+		}
 		if (board.getEntityType(targetPos) == EntityType::PLAYER) {
             auto player = std::dynamic_pointer_cast<Player>(board.getEntityAt(targetPos));
             auto mob = std::dynamic_pointer_cast<Mob>(entity);

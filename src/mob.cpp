@@ -46,6 +46,31 @@ void Mob::setPatrol(){
     currentState = Enemystate::PATROL;
 }
 
-void Mob::chase(std::shared_ptr<Player> player,int distance,Board& board){
+void Mob::patrol(Board& board,SDL_Renderer* renderer,TTF_Font* font,SDL_Texture* playerTexture,
+                SDL_Texture* mobTexture){
+    Direction dir = getRandDir();
+    MoveDirection(shared_from_this(),dir,board,renderer,font,playerTexture,mobTexture);
+}
+
+void Mob::chase(std::shared_ptr<Player> player,int distance,Board& board,
+                SDL_Renderer* renderer,TTF_Font* font,SDL_Texture* playerTexture,
+                SDL_Texture* mobTexture){
+
+    Position mobPos = getPosition();
+    Position playerPos = player->getPosition();
     
+    if (distance <= 5){
+        if (mobPos.x < playerPos.x){
+            MoveDirection(shared_from_this(),Direction::DOWN,board,renderer,font,playerTexture,mobTexture);
+        }
+        if (mobPos.y < playerPos.y){
+            MoveDirection(shared_from_this(),Direction::RIGHT,board,renderer,font,playerTexture,mobTexture);
+        }
+        if (mobPos.x > playerPos.x){
+            MoveDirection(shared_from_this(),Direction::UP,board,renderer,font,playerTexture,mobTexture);
+        }
+        if (mobPos.y > playerPos.y){
+            MoveDirection(shared_from_this(),Direction::LEFT,board,renderer,font,playerTexture,mobTexture);
+        }
+    }
 }

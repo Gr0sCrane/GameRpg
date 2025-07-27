@@ -20,27 +20,6 @@ void MoveDirection(std::shared_ptr<Entity> entity,
 					TTF_Font* font,
 					SDL_Texture* playerTexture,
 					SDL_Texture* mobTexture);
-
-void MoveRight(Entity* entity, Board& board,
-               SDL_Renderer* renderer,
-               TTF_Font* font,
-               SDL_Texture* playerTexture,
-               SDL_Texture* mobTexture);
-void MoveLeft(Entity* entity, Board& board,
-               SDL_Renderer* renderer,
-               TTF_Font* font,
-               SDL_Texture* playerTexture,
-               SDL_Texture* mobTexture);
-void MoveUp(Entity* entity, Board& board,
-               SDL_Renderer* renderer,
-               TTF_Font* font,
-               SDL_Texture* playerTexture,
-               SDL_Texture* mobTexture);
-void MoveDown(Entity* entity, Board& board,
-               SDL_Renderer* renderer,
-               TTF_Font* font,
-               SDL_Texture* playerTexture,
-               SDL_Texture* mobTexture);
                
 void CollectItem(std::shared_ptr<Player> player, Board& board,Position pos);
 bool IsPlayerNearMob(Player* player, Board& board);
