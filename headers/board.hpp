@@ -49,4 +49,5 @@ public:
     void renderText(SDL_Renderer* renderer, TTF_Font* font, const std::string& text, int x, int y, SDL_Color color);
     void drawTitleScreen(SDL_Renderer* renderer, TTF_Font* font);
     void drawPauseScreen(SDL_Renderer* renderer,TTF_Font* font);
+    void drawGameOverScreen(SDL_Renderer* renderer,TTF_Font* font);
 };

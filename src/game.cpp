@@ -166,7 +166,7 @@ void Game::run(){
                 quit();
             }
             else if (e.type == SDL_KEYDOWN) {
-            SDL_Scancode key = e.key.keysym.scancode;
+                SDL_Scancode key = e.key.keysym.scancode;
 
                 if (currentState == GameState::TITLE && key == SDL_SCANCODE_SPACE) {
                     currentState = GameState::FREE;
@@ -182,6 +182,12 @@ void Game::run(){
                     } else if (key == SDL_SCANCODE_RETURN) {
                         end = true;
                     }
+                } else if (currentState == GameState::GAMEOVER){
+                    board.drawGameOverScreen(renderer,titleFont);
+                    if (key == SDL_SCANCODE_RETURN){
+                        end = true;
+                    }
+                    SDL_RenderPresent(renderer);
                 }
             }
 		}
@@ -189,16 +195,23 @@ void Game::run(){
             if (is_key_pressed(SDL_SCANCODE_SPACE)){
                 currentState = GameState::FREE;
             }
+
             board.drawTitleScreen(renderer,titleFont);
             SDL_RenderPresent(renderer);
             SDL_Delay(20);
         }
         else if (currentState == GameState::PAUSE){
+
             board.drawPauseScreen(renderer,titleFont);
             SDL_RenderPresent(renderer);
             SDL_Delay(20);
+
         }
         else if (currentState == GameState::FREE){
+
+            if (player->getStats().hp == 0){
+                currentState = GameState::GAMEOVER;
+            }
 
             // UPDATE
             Uint32 currentTime = SDL_GetTicks();

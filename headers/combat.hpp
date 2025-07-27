@@ -9,7 +9,8 @@ enum class GameState {
     FREE, // the player is free to move
     COMBAT, // Combat mode
     TITLE, // Titlescreen
-    PAUSE // Pause mode
+    PAUSE, // Pause mode
+    GAMEOVER // GameOver, player is at 0 hp
 };
 
 enum class Turn{
