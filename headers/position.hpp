@@ -4,8 +4,7 @@
 /**
  * @struct Position
  * @brief Represent a position on the board.
- * @param x X coord
- * @param y Y coord
+ * 
  */
 struct Position {
     int x;
@@ -27,6 +26,12 @@ namespace std {
     };
 }
 
+/**
+ * @enum Direction
+ * @brief Enum class that represent a direction
+ * for movement.
+ * @return a direction used for movement: UP, DOWN, LEFT, RIGHT or NONE.
+ */
 enum class Direction {
     UP,
     DOWN,

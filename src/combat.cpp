@@ -1,11 +1,26 @@
 #include <iostream>
 #include "combat.hpp"
 
+/// @brief Colors used for the text render.
 SDL_Color white = {255, 255, 255, 255};
 SDL_Color green = {15,255,0,0};
 SDL_Color red = {155,0,0,0};
 SDL_Color yellow = {255, 255, 0, 255};
 
+/**
+ * @brief determine if the player can run from the battle or not.
+ * 
+ * If the player's hp is at max, there is a 100% chance to run.
+ * 
+ * If the player's hp is high, there is a 1/6 chance to run.
+ * 
+ * If the player's hp is at mid hp, there is a 1/3 chance to run.
+ * 
+ * If the player's hp is low, there is a 1/2 chance to run.
+ * 
+ * @param player the player used to calculate the chance with his stats.
+ * @return boolean that determinate if the run is successfull. True or False.
+ */
 bool running(std::shared_ptr<Player> player){
 
     int hp = player->getStats().hp;
@@ -19,14 +34,14 @@ bool running(std::shared_ptr<Player> player){
         return true;
     }
     //High hp case
-    else if (hp > maxhp){
+    else if (hp > maxhp/2){
         if (randomIntHC == 1){
             return true;
         }
         return false;
     }
     //Low hp case
-    else if (hp < maxhp){
+    else if (hp < maxhp/2){
         if (randomIntLC == 0){
             return false;
         }
@@ -38,6 +53,14 @@ bool running(std::shared_ptr<Player> player){
     }
 }
 
+/**
+ * @brief Render the text using the font and renderer from SDL.
+ * @param renderer the renderer (SDL).
+ * @param text the text needed to be rendered.
+ * @param x the X coord.
+ * @param y the Y coord.
+ * @param color the color of the text.
+ */
 void renderText(SDL_Renderer* renderer, TTF_Font* font, const std::string& text, int x, int y, SDL_Color color) {
 	SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), color);
 	if (!surface) return;
@@ -50,6 +73,12 @@ void renderText(SDL_Renderer* renderer, TTF_Font* font, const std::string& text,
 	SDL_DestroyTexture(texture);
 }
 
+/**
+ * @brief Render the inventory of the player 
+ * @param player the player.
+ * @param renderer the renderer (SDL).
+ * @param font the font used to render texts.
+ */
 void getItemInventory(std::shared_ptr<Player> player,SDL_Renderer* renderer,TTF_Font* font){
 
     auto& item = player->getInventory().getItems();
@@ -66,6 +95,22 @@ void getItemInventory(std::shared_ptr<Player> player,SDL_Renderer* renderer,TTF_
     }
 }
 
+/**
+ * @brief Display the fight between the player and the enemy.
+ * 
+ * If the currenTurn is the player turn, he have 4 choices: Attack, protect, inventory and run.
+ * @see CurrentTurn
+ * @see running()
+ * 
+ * If the currentTurn is for the enemy, this will render a text to inform the player that the enemy is attacking.
+ * 
+ * @param renderer the renderer (SDL)
+ * @param playerTexture, mobTexture the textures used for the entities.
+ * @param player, mob one of the actor of the action.
+ * @param currenTurn will indicate if the current turn is for the player or the enemy.
+ * @param selectedIndex parameter used for another function that show wich case is selected.
+ * @param isInventorySelected parameter that indicate if the case "Inventory" has been choiced.
+ */
 void displayCombat(SDL_Renderer* renderer, TTF_Font* font,
                    SDL_Texture* playerTexture, SDL_Texture* mobTexture,
                    std::shared_ptr<Player> player, std::shared_ptr<Mob> mob,Turn currentTurn,
@@ -74,7 +119,7 @@ void displayCombat(SDL_Renderer* renderer, TTF_Font* font,
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
-    // Affiche les sprites
+    // render the sprites
     SDL_Rect playerRect = {100, 200, 128, 128};
     SDL_Rect mobRect = {400, 200, 128, 128};
     SDL_RenderCopy(renderer, playerTexture, NULL, &playerRect);
@@ -113,6 +158,13 @@ void displayCombat(SDL_Renderer* renderer, TTF_Font* font,
     SDL_RenderPresent(renderer);
 }
 
+/**
+ * @brief Render a rectangle on the position gived.
+ * @param renderer the renderer (SDL).
+ * @param x the X coord.
+ * @param y the Y coord.
+ * @param options a vector containing 4 options between Attack, protect, inventory and run
+ */
 void DisplayRect(SDL_Renderer* renderer,int x, int y,const std::vector<std::string>& options){
 
     int SpacingX = 200;
@@ -130,6 +182,18 @@ void DisplayRect(SDL_Renderer* renderer,int x, int y,const std::vector<std::stri
     }
 }
 
+/**
+ * @brief Starts a fight between the player and an enemy.
+ * 
+ * The player can select 4 choice. If he chose one of them the currentTurn change to the enemy turn.
+ * 
+ * If one of the two actors have 0 hp, the fight finish. If the player won, he gain xp, if not the fight end and the game
+ * change to a Game over screen.
+ * 
+ * @param board the game board.
+ * @param player, mob one of the two actor of the fight.
+ * @param renderer, font, playerTexture, mobTexture parameters used for the SDL render.
+ */
 void StartFight(Board& board, std::shared_ptr<Player> player, std::shared_ptr<Mob> mob,
                 SDL_Renderer* renderer, TTF_Font* font,
                 SDL_Texture* playerTexture, SDL_Texture* mobTexture) {

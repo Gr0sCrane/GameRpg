@@ -1,3 +1,4 @@
+/*-Header file of src/classes.cpp-*/
 #pragma once
 #include <array>
 #include <vector>
@@ -5,6 +6,10 @@
 #include <string>
 #include "entity.hpp"
 
+/**
+ * @class Item
+ * @brief represent an item.
+ */
 class Item : public Entity {
 private:
     std::string name;
@@ -17,10 +22,14 @@ public:
     void setName(const std::string& newName);
 };
 
+/**
+ * @class Inventory
+ * @brief represent the inventory
+ */
 class Inventory {
 private:
     std::vector<std::shared_ptr<Item>> items;
-    static constexpr size_t MAX_INV_SIZE = 5;
+    static constexpr size_t MAX_INV_SIZE = 5; // maximum size of the inventory.
 public:
     Inventory();
     bool addItem(std::shared_ptr<Item> item);
@@ -32,6 +41,11 @@ public:
     bool isEmpty();
 };
 
+/**
+ * @class Stats
+ * @brief represent the statistics of an entity.
+ * 
+ */
 class Stats {
 public:
     int hp;
@@ -50,9 +64,14 @@ public:
 
 };
 
+/**
+ * @class Heal
+ * @brief represent a heal item
+ * @see Item
+ */
 class Heal : public Item {
 private:
-    double healAmount;
+    double healAmount; //the amount of hp the heal item can give. <Double>
 public:
     Heal(const std::string& itemName, double healamount,Position pos);
     double getHealAmount() const;
@@ -64,15 +83,26 @@ public:
     }
 };
 
+/**
+ * @class Weapon
+ * @brief represent a weapon item.
+ * 
+ * @see Item
+ */
 class Weapon : public Item {
 private:
-    double attackPoints;
+    double attackPoints; //the amount of attack points the item can do.
 public:
     Weapon(const std::string& itemName, double attack,Position pos);
     double getAttackPoints() const;
     void setAttackPoints(double newAttack);
 };
 
+/**
+ * @class Sword
+ * @brief represent a sword item.
+ * @see Item
+ */
 class Sword : public Weapon {
 public:
     Sword(const std::string& itemName, double attack, Position pos);
@@ -83,9 +113,14 @@ public:
     }
 };
 
+/**
+ * @class Bow
+ * @brief represent a bow item.
+ * @see Item
+ */
 class Bow : public Weapon {
 private:
-    double range;
+    double range; // the range of the bow.
 public:
     Bow(const std::string& itemName, double attack, double range, Position pos);
     double getRange() const;

@@ -1,20 +1,33 @@
+/*-Header file of src/mob.cpp-*/ 
 #pragma once
 #include <iostream>
 #include "classes.hpp"
 #include "player.hpp"
 #include "board.hpp"
 
+/**
+ * @enum EnemyState
+ * @brief represent the current state of the enemy.
+ */
 enum class Enemystate {
-    PATROL, // the enemy is free to move on the board
-    CHASE // the enemy chase the nearest player
+
+    /// the enemy is free to move on the board
+    PATROL,
+    /// the enemy chase the nearest player
+    CHASE
 };
 
+/**
+ * @class Mob
+ * @brief Represent a enemy
+ * 
+ */
 class Mob : public Entity, public std::enable_shared_from_this<Mob> {
 private:
     std::string mobname;
     Stats stats;
     Inventory inventory;
-    Enemystate currentState;
+    Enemystate currentState; // the current state of the enemy.
 public:
     Mob(const std::string& name,Stats stats,Position pos);
     std::string getMobName() const;

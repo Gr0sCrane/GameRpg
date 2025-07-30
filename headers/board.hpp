@@ -1,3 +1,4 @@
+/*-Header file of src/board.cpp-*/
 #pragma once
 #include <string>
 #include <sstream>
@@ -9,19 +10,19 @@
 #include <memory>
 #include "game_function.hpp"
 
-const int kBoardSize = 19;
-const int kTilesize = 32;
+const int kBoardSize = 19; // size of the Board
+const int kTilesize = 32; // size of a Tile
 
 Direction getRandDir();
 
 /**
  * @class Board
  * @brief this class contains the board and all the entities of the game
- * @param entities Contains all the entities of the board
+ * 
  */
 class Board {
 private:
-    std::unordered_map<Position,std::shared_ptr<Entity>> entities;
+    std::unordered_map<Position,std::shared_ptr<Entity>> entities; // unordered map that contains all the entities.
 public:
 
     Board();

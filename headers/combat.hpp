@@ -1,3 +1,4 @@
+/*-Header file of src/combat.cpp-*/
 #include <iostream>
 #include "board.hpp"
 #include "input.h"
@@ -5,16 +6,33 @@
 #include "mob.hpp"
 #include <random>
 
+/**
+ * @enum GameState
+ * @brief indicate the state of the game.
+ * @return 5 mode: FREE, COMBAT, TITLE, PAUSE, GAMEOVER
+ */
 enum class GameState {
-    FREE, // the player is free to move
-    COMBAT, // Combat mode
-    TITLE, // Titlescreen
-    PAUSE, // Pause mode
-    GAMEOVER // GameOver, player is at 0 hp
+    /// the player is free to move
+    FREE,
+    /// Fight mode
+    COMBAT,
+    /// Title screen
+    TITLE,
+    /// Pause mode
+    PAUSE,
+    /// Game over, player is at 0 hp.
+    GAMEOVER
 };
 
+/**
+ * @enum Turn
+ * @brief indicate in which turn is the fight occuring.
+ * @return PLAYER or MOB
+ */
 enum class Turn{
+    /// Player turn
     PLAYER,
+    /// Enemy turn
     MOB
 };
 

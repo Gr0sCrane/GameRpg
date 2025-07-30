@@ -2,6 +2,14 @@
 #include "mob.hpp"
 #include <iostream> 
 
+/**
+ * @brief Determine a random direction.
+ * 
+ * Used for the enemy's algoritm in the PATROL state.
+ * @see Mob.cpp
+ * 
+ * @return a direction chosed randomly.
+ */
 Direction getRandDir(){
     int nbr = rand() % 4;
 
@@ -28,10 +36,22 @@ Direction getRandDir(){
 
 //|==========================|Class Board|===============================================|
 
+/**
+ * @brief Constructor of the Board class.
+ */
 Board::Board() {}
 
+/**
+ * @brief Destructor of the Board class.
+ */
 Board::~Board() = default;
 
+/**
+ * @brief Sets an entity at the position chosed and update the entity's position value.
+ * 
+ * @param pos the position where the entity will get placed.
+ * @param entity the entity targeted.
+ */
 void Board::setEntity(Position pos, std::shared_ptr<Entity> entity) {
     if (pos.x >= 0 && pos.y < kBoardSize &&
         pos.y >= 0 && pos.y < kBoardSize) {
@@ -44,11 +64,16 @@ void Board::setEntity(Position pos, std::shared_ptr<Entity> entity) {
         }
 
     } else {
-        std::cerr << "Position invalide (" << pos.x << ", " << pos.y << ")" << std::endl;
+        std::cerr << "Invalid Position:  (" << pos.x << ", " << pos.y << ")" << std::endl;
     }
 }
 
 
+/**
+ * @brief Used to get the entity at the position given.
+ * @return the entity at the position.
+ * @param pos the position targeted.
+ */
 std::shared_ptr<Entity> Board::getEntityAt(Position pos) const {
 
     auto it = entities.find(pos);
@@ -58,6 +83,10 @@ std::shared_ptr<Entity> Board::getEntityAt(Position pos) const {
     return nullptr;
 }
 
+/**
+ * @brief Delete the entity at the position given.
+ * @param pos the position targeted.
+ */
 void Board::DeleteEntity(Position pos) {
 
     auto it = entities.find(pos);
@@ -66,10 +95,18 @@ void Board::DeleteEntity(Position pos) {
     }
 }
 
+/**
+ * @brief Getter for the main array that contains all the entities.
+ * @return the array of entities.
+ */
 std::unordered_map<Position,std::shared_ptr<Entity>> Board::getEntities() const {
     return entities;
 }
 
+/**
+ * @brief Filter the main array of entities to get only the enemies.
+ * @return an array of all the enemies.
+ */
 std::vector<std::pair<Position, std::shared_ptr<Entity>>> Board::getEnemiesInBoard() const{
 
     std::vector<std::pair<Position, std::shared_ptr<Entity>>> enemies;
@@ -84,6 +121,10 @@ std::vector<std::pair<Position, std::shared_ptr<Entity>>> Board::getEnemiesInBoa
     return enemies;
 }
 
+/**
+ * @brief Filter the main array of entities to get only the Heal items.
+ * @return an array of all the Heal items.
+ */
 std::vector<std::pair<Position, std::shared_ptr<Entity>>> Board::getHealInBoard() const{
 
     std::vector<std::pair<Position, std::shared_ptr<Entity>>> Heals;
@@ -99,7 +140,16 @@ std::vector<std::pair<Position, std::shared_ptr<Entity>>> Board::getHealInBoard(
     return Heals;
 }
 
-
+/**
+ * @brief Getter for the EntityType of the entity at the position given.
+ * 
+ * If the entity is not identified, it returns the EntityType VOID.
+ * 
+ * @see EntityType.
+ * @param pos the position targeted.
+ * 
+ * @return the Entitytype of the entity at the position given.
+ */
 EntityType Board::getEntityType(Position pos) const {
     
     auto it = entities.find(pos);
@@ -109,6 +159,13 @@ EntityType Board::getEntityType(Position pos) const {
     return EntityType::VOID;
 }
 
+/**
+ * @brief Indicate if the position given is walkable or not.
+ *  This function is used for the enemy's algorithm.
+ * 
+ * @param pos the position targeted.
+ * @return True if yes, false if not.
+ */
 bool Board::isWalkable(Position pos){
     if (getEntityType(pos) != EntityType::VOID && getEntityType(pos) != EntityType::PLAYER){
         return false;
@@ -116,6 +173,13 @@ bool Board::isWalkable(Position pos){
     return true;
 }
 
+/**
+ * @brief Draws the board and all the textures of the player and enemies.
+ * 
+ * The function check with the EntityType to know wich texture to render and display on one case.
+ * @param renderer the renderer (SDL).
+ * @param Playertexture, SwordTexture, Bowtexture, MobTexture, HealTexture a texture of the entities.
+ */
 void Board::DrawBoard(SDL_Renderer* renderer,
     SDL_Texture* PlayerTexture,SDL_Texture* SwordTexture,
     SDL_Texture* BowTexture, SDL_Texture* MobTexture,
@@ -191,6 +255,14 @@ void Board::DrawBoard(SDL_Renderer* renderer,
     }
 }
 
+/**
+ * @brief Displays at the top right all the informations about the player.
+ * 
+ * Position, Health points, attack, defense, Xp, level...
+ * 
+ * @param renderer the renderer (SDL).
+ * @param player the player.
+ */
 void Board::DrawInfo(SDL_Renderer* renderer, Player* player) const {
     if (!player) return;
 
@@ -205,6 +277,9 @@ void Board::DrawInfo(SDL_Renderer* renderer, Player* player) const {
     SDL_RenderFillRect(renderer, &infoBox);
 }
 
+/**
+ * @brief SDL function used for rendering texts on the screen using a font and colors.
+ */
 void Board::renderText(SDL_Renderer* renderer, TTF_Font* font, const std::string& text, int x, int y, SDL_Color color) {
 	SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), color);
 	if (!surface) return;
@@ -217,6 +292,16 @@ void Board::renderText(SDL_Renderer* renderer, TTF_Font* font, const std::string
 	SDL_DestroyTexture(texture);
 }
 
+/**
+ * @brief Displays at the top right all the informations about the player.
+ * 
+ * Position, Health points, attack, defense, Xp, level...
+ * 
+ * @param renderer the renderer (SDL).
+ * @param player the player.
+ * @param font the font used for texts.
+ * @param board the gale board.
+ */
 void Board::renderPlayerInfo(SDL_Renderer* renderer, TTF_Font* font, Player* player, Board& board) {
     if (!player) return;
 
@@ -276,6 +361,11 @@ void Board::renderPlayerInfo(SDL_Renderer* renderer, TTF_Font* font, Player* pla
 
 }
 
+/**
+ * @brief Draws the title screen of the game.
+ * @param renderer the renderer (SDL).
+ * @param font the font used for texts.
+ */
 void Board::drawTitleScreen(SDL_Renderer* renderer, TTF_Font* font){
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
@@ -286,6 +376,11 @@ void Board::drawTitleScreen(SDL_Renderer* renderer, TTF_Font* font){
     renderText(renderer,font,"personal project by Mouad, (it sucks)",420,570,white);
 }
 
+/**
+ * @brief Draws the pause screen of the game.
+ * @param renderer the renderer (SDL).
+ * @param font the font used for texts.
+ */
 void Board::drawPauseScreen(SDL_Renderer* renderer,TTF_Font* font){
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
@@ -295,6 +390,11 @@ void Board::drawPauseScreen(SDL_Renderer* renderer,TTF_Font* font){
     renderText(renderer,font,"Press ENTER to quit the game",260,300,white);
 }
 
+/**
+ * @brief Draws the game over screen of the game.
+ * @param renderer the renderer (SDL).
+ * @param font the font used for texts.
+ */
 void Board::drawGameOverScreen(SDL_Renderer* renderer,TTF_Font* font){
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);

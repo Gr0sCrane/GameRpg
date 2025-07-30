@@ -1,17 +1,28 @@
+/*-Header file of src/entity.cpp-*/
 #include <iostream>
 #include "position.hpp"
 
 /**
  * @enum EntityType
- * @brief Enum class that represent the Type of the Entity: Player,Mob,Item
+ * @brief represent the Type of the Entity
+ * @return 4 type: PLAYER, MOB, ITEM, VOID
  */
 enum class EntityType {
+    /// player entity
     PLAYER,
+    /// enemy entity
     MOB,
+    /// item entity
     ITEM,
+    /// void entity
     VOID
 };
 
+/**
+ * @class Entity
+ * represent an entity
+ * 
+ */
 class Entity {
     private:
     EntityType type;

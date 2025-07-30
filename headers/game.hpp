@@ -1,3 +1,4 @@
+/*-Header file of src/game.cpp-*/
 #include <iostream>
 #include <SDL_ttf.h>
 #include <SDL.h>
@@ -7,6 +8,11 @@
 #include "entity_spawn.hpp"
 #include "algorithm.hpp"
 
+/**
+ * Check inputs and give a direction
+ * @return a direction
+ * @see Enum Direction
+ */
 const std::unordered_map<SDL_Scancode, Direction> keyToDirection = {
     {SDL_SCANCODE_UP, Direction::UP},
     {SDL_SCANCODE_DOWN, Direction::DOWN},
@@ -14,6 +20,27 @@ const std::unordered_map<SDL_Scancode, Direction> keyToDirection = {
     {SDL_SCANCODE_RIGHT, Direction::RIGHT}
 };
 
+/**
+ * @struct Game
+ * Contains all the assets and game functions required to run the game.
+ * @param window the main window (SDL).
+ * @param renderer a structure representing rendering state (SDL).
+ * @param font the font used to write texts -> from assets/fonts/
+ * @param titlefont another font used to write texts -> assets/fronts/
+ * 
+ * @param PlayerSurface, playertexture the texture of the player -> assets/images/
+ * @param SwordSurface, swordtexture the texture of swords items -> assets/images/
+ * @param BowSurface, bowTexture the texture of bows items -> assets/images/
+ * @param MobSurface, mobtexture the texture of enemies -> assets/images/
+ * @param HealSurface, healTexture the texture of heals items -> assets/images/
+ * 
+ * @param player the player.
+ * @param board the main board
+ * 
+ * @param currentState the current state of the Game: FREE, COMBAT, TITLE, PAUSE and GAMEOVER.
+ * @param lastEnemyUpdate the last enemy update used for the update loop.
+ * @param enemyUpdateInterval the interval between an update.
+ */
 struct Game {
     SDL_Window *window = nullptr;
     SDL_Renderer *renderer = nullptr;

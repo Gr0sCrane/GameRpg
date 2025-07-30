@@ -1,3 +1,4 @@
+/*-Header file of src/game_function.cpp-*/
 #pragma once
 #include "classes.hpp"
 #include <SDL_ttf.h>

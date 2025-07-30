@@ -1,6 +1,13 @@
 #include <iostream>
 #include "algorithm.hpp"
 
+/**
+ * @brief Calculate the distance between the enemy and the player.
+ * @param mob the enemy that use this function.
+ * @param player the player.
+ * 
+ * @return the distance between the enemy and the player.
+ */
 int calculateDistance(std::shared_ptr<Mob> mob, std::shared_ptr<Player> player)
 {
 
@@ -14,24 +21,21 @@ int calculateDistance(std::shared_ptr<Mob> mob, std::shared_ptr<Player> player)
     return sqrt(calcul);
 }
 
-std::vector<std::pair<Position, std::shared_ptr<Entity>>> initEnemyAlgortihm(Board &board, std::shared_ptr<Player> player)
-{
-
-    auto entities = board.getEntities();
-    std::vector<std::pair<Position, std::shared_ptr<Entity>>> enemies;
-
-    if (entities.empty()){
-        return {};
-    }
-
-    enemies = board.getEnemiesInBoard();
-    return enemies;
-}
-
-void setAlgorithm(std::shared_ptr<Player> player,Board& board,SDL_Renderer* renderer,
+/**
+ * @brief Set the algortithm for all the enemies on the board.
+ * 
+ * If the distance between the player and an enemy is 5 or bellow, the enemy will chase the player.
+ * 
+ * @param player the player.
+ * @param board the game board.
+ * @param renderer the renderer (SDL).
+ * @param font the font used for texts.
+ * @param playerTexture, mobTexturethe the texture of the entity.
+ */
+void initAlgorithm(std::shared_ptr<Player> player,Board& board,SDL_Renderer* renderer,
     TTF_Font* font,SDL_Texture* playerTexture,SDL_Texture* mobTexture)
 {
-    auto enemyList = initEnemyAlgortihm(board,player);
+    auto enemyList = board.getEnemiesInBoard();
 
     if(!enemyList.empty()){
         for (size_t i = 0; i < enemyList.size(); i++){

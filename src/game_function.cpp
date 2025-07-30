@@ -3,6 +3,24 @@
 #include "board.hpp"
 #include "combat.hpp"
 
+/**
+ * @brief This function return the next position using the direction.
+ * 
+ * If the movement is out of bounds, the entity get teleported to the opposite side of the board.
+ * 
+ * If the direction is RIGHT: the y coord is increased by 1.
+ * 
+ * If the direction is LEFT: the y coord is deincreased by 1.
+ * 
+ * If the direction is UP: the x coord is deincreased by 1.
+ * 
+ * If the direction is DOWN: the x coord is increased by 1.
+ * 
+ * @param posX the X coord.
+ * @param posY the Y coord.
+ * @param dir the direction gived for the movement.
+ * @return the new position of the entity.
+ */
 Position getDirection(int posX, int posY, Direction dir){
 	switch (dir)
 	{
@@ -31,6 +49,13 @@ Position getDirection(int posX, int posY, Direction dir){
 	return Position(posX,posY);
 }
 
+/**
+ * @brief Heals the player with the amount given. 
+ * 
+ * If the player's max Health point stats is reached, the function does nothing.
+ * @param player the targeted player.
+ * @param amount the amount of health point the player get.
+ */
 void HealPlayer(std::shared_ptr<Player> player, int amount) {
 	if (amount < 0) {
 		return;
@@ -42,6 +67,14 @@ void HealPlayer(std::shared_ptr<Player> player, int amount) {
 	}
 }
 
+/**
+ * @brief Heal the player using the Heal item stats.
+ * @see HealPlayer().
+ * 
+ * @param player the player targeted.
+ * @param board the game board.
+ * @param pos the position of the heal item.
+ */
 void HealPlayerOnItem(std::shared_ptr<Player> player, Board& board, Position pos) {
 	Entity* entity = board.getEntityAt(pos).get();
 	Heal* healItem = dynamic_cast<Heal*>(entity);
@@ -50,6 +83,27 @@ void HealPlayerOnItem(std::shared_ptr<Player> player, Board& board, Position pos
 	}
 }
 
+/**
+ * @brief Function that control the movement of an entity.
+ * 
+ * If the entity is a player, a new position is given, the old position is set as nullptr and the entity is on the
+ * new position.
+ * 
+ * If the player touch a enemy, a fight begin.
+ * 
+ * If the player touch a Heal item, it heals him.
+ * 
+ * If the entity is a enemy, the enemy look at first if the new position is walkable, if yes the enemy move,
+ * if no the enemy dont move. If the enemy touch a player, it starts a fight.
+ * 
+ * @param entity the entity targeted
+ * @param direction the direction gived to move in the direction in param.
+ * @param board the game board.
+ * @param renderer the renderer (SDL).
+ * @param font the font used for texts.
+ * @param playerTexture the player texture.
+ * @param mobTexture the mob texture.
+ */
 void MoveDirection(std::shared_ptr<Entity> entity,
 				    Direction direction,
 					Board& board,
@@ -69,7 +123,7 @@ void MoveDirection(std::shared_ptr<Entity> entity,
 		if (!player){
 			return;
 		}
-		if(dynamic_cast<Heal*>(target)){
+		if (dynamic_cast<Heal*>(target)){
 			HealPlayerOnItem(player,board,targetPos);
 		} else if (board.getEntityType(targetPos) == EntityType::ITEM) {
 			CollectItem(player,board,targetPos);
@@ -98,6 +152,13 @@ void MoveDirection(std::shared_ptr<Entity> entity,
 
 }
 
+/**
+ * @brief This function collect the item at the position given.
+ * 
+ * @param player the player.
+ * @param board the game board.
+ * @param pos the position of the item.
+ */
 void CollectItem(std::shared_ptr<Player> player, Board& board, Position pos) {
     
     auto entityPtr = board.getEntityAt(pos);
@@ -120,6 +181,12 @@ void CollectItem(std::shared_ptr<Player> player, Board& board, Position pos) {
     std::cout << "Item " << itemPtr->getName() << " collected" << std::endl;
 }
 
+/**
+ * @brief Indicate if the player is near an enemy.
+ * @param player the player.
+ * @param board the game board.
+ * @return true if a enemy is near the player, false if not
+ */
 bool IsPlayerNearMob(Player* player, Board& board) {
 	auto playerPos = player->getPosition();
 	for (int x = playerPos.x - 2; x <= playerPos.x + 2; ++x) {
@@ -135,6 +202,12 @@ bool IsPlayerNearMob(Player* player, Board& board) {
 	return false;
 }
 
+/**
+ * @brief Function that can give the nearest mob.
+ * @param player the player.
+ * @param board the game board.
+ * @return the nearest enemy.
+ */
 Mob* getNearMob(Player* player, Board& board) {
 	auto playerPos = player->getPosition();
 	for (int x = playerPos.x - 2; x <= playerPos.x + 2; ++x) {
@@ -150,6 +223,12 @@ Mob* getNearMob(Player* player, Board& board) {
 	return nullptr;
 }
 
+/**
+ * @brief Gives a boolean result if a enemy is at the given position.
+ * @param pos the position on the board
+ * @param board the game board
+ * @return True if an enemy is at the position, false if not.
+ */
 bool isMobAt(Position pos, Board& board){
 	if (board.getEntityType(pos) == EntityType::MOB){
 		return true;

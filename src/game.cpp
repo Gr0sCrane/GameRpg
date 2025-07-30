@@ -1,6 +1,10 @@
 #include <iostream>
 #include "game.hpp"
 
+/**
+ * @brief Init the SDL and load all the texture of the game.
+ * @return True if it succeed, false if not.
+ */
 bool Game::initRender(){
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         return false;
@@ -122,6 +126,9 @@ bool Game::initRender(){
     return true;
 }
 
+/**
+ * @brief Init the player, enemy spawns and items spawn.
+ */
 void Game::init(){
 
     player = std::make_shared<Player>(kDefault_pos);
@@ -139,6 +146,9 @@ void Game::init(){
 
 }
 
+/**
+ * @brief Closes the SDL and clean up everything.
+ */
 void Game::quit(){
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
@@ -151,6 +161,19 @@ void Game::quit(){
     std::cout<<"+ Game closed..."<<"\n";
 }
 
+/**
+ * @brief The main loop.
+ * 
+ * Start the game in Title screen, if the player press ENTER, the game start. 
+ * If the player press ESCAPE the game enter in PAUSE mode. To leave this mode press ENTER.
+ * 
+ * In FREE mode, the player can move on the board using the arrows and can collect items or start a fight touching an enemy.
+ * Each 800 ms the game update.
+ * 
+ * If the player have low hp, a heal item spawn randomly on the board.
+ * 
+ * If the board contains no enemies, the game generated 3 new enemies with scaled stats based on the player level.
+ */
 void Game::run(){
     // Set the Gamestate in Title screen
     currentState = GameState::TITLE;
@@ -216,7 +239,7 @@ void Game::run(){
             // UPDATE
             Uint32 currentTime = SDL_GetTicks();
             if (currentTime - lastEnemyUpdate > enemyUpdateInterval) {
-                setAlgorithm(player, board, renderer, font, playerTexture, mobTexture);
+                initAlgorithm(player, board, renderer, font, playerTexture, mobTexture);
                 lastEnemyUpdate = currentTime;
             }
 
