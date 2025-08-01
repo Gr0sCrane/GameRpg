@@ -14,10 +14,21 @@
  * @see Enum Direction
  */
 const std::unordered_map<SDL_Scancode, Direction> keyToDirection = {
-    {SDL_SCANCODE_UP, Direction::UP},
-    {SDL_SCANCODE_DOWN, Direction::DOWN},
-    {SDL_SCANCODE_LEFT, Direction::LEFT},
-    {SDL_SCANCODE_RIGHT, Direction::RIGHT}
+    /// arrows
+    {SDL_SCANCODE_UP,    Direction::UP},
+    {SDL_SCANCODE_DOWN,  Direction::DOWN},
+    {SDL_SCANCODE_LEFT,  Direction::LEFT},
+    {SDL_SCANCODE_RIGHT, Direction::RIGHT},
+
+    // WASD (QWERTY)
+    {SDL_SCANCODE_W, Direction::UP},
+    {SDL_SCANCODE_A, Direction::LEFT},
+    {SDL_SCANCODE_S, Direction::DOWN},
+    {SDL_SCANCODE_D, Direction::RIGHT},
+
+    // ZQSD (AZERTY)
+    {SDL_SCANCODE_Z, Direction::UP},
+    {SDL_SCANCODE_Q, Direction::LEFT}
 };
 
 /**
