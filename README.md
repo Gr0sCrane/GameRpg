@@ -65,7 +65,7 @@ The main project's folder is like this:
 
 ***
 ## On Windows 10/11.
-* Double click on the .exe file. It should launch the game.
+* Double click on the .exe file. It should launch the game. If it doesn't work, compile it by yourself using gcc and the .dll files of the library SDL2. Use MINGW64 and write **make**. Then write **./gameRpg_Win.exe** and launch the game.
 
 ## On Linux.
 * I would probably do a separate build for Linux. TODO
