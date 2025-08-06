@@ -1,9 +1,9 @@
 /*-Header file of src/game_function.cpp-*/
 #pragma once
 #include "classes.hpp"
-#include <SDL_ttf.h>
-#include <SDL.h>
-#include <SDL_image.h>
+#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include "player.hpp"
 
 #ifndef GAMEFUNCTION_HPP

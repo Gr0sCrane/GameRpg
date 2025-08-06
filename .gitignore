@@ -36,3 +36,6 @@
 x64/
 *.sln
 *.vcxproj
+
+build
+cmake
