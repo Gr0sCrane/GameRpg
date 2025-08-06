@@ -1,5 +1,5 @@
 #include "input.h"
-#include <SDL_keyboard.h>
+#include <SDL2/SDL_keyboard.h>
 
 // * Checks if a key was pressed, scancode should be something like "SDL_SCANCODE_X"
 bool is_key_pressed(int scancode){

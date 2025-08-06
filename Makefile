@@ -1,5 +1,5 @@
 CXX = g++
-INCLUDES = -Iheaders -IC:/msys64/ucrt64/include/SDL2
+INCLUDES = -Iheaders -IC:/msys64/ucrt64/include/
 CXXFLAGS = -g -Wall -std=c++17 -fdiagnostics-color=always $(INCLUDES)
 LDFLAGS = -lmingw32 -lSDL2main -lSDL2 -mwindows -lSDL2_ttf -lSDL2_image -static-libstdc++ -static-libgcc
 LIBDIRS = -LC:/msys64/ucrt64/lib
